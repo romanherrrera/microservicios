@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Ingresos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h1>Registro de Ingresos</h1>
+    <div id="ingresos"></div>
+    <form id="ingresoForm">
+        <input type="text" id="codigoEstudiante" placeholder="Código del Estudiante" required>
+        <input type="text" id="nombreEstudiante" placeholder="Nombre del Estudiante" required>
+        <select id="programa">
+            <option value="1">Ing. Sistemas</option>
+            <option value="2">Ing. Multimedia</option>
+            <option value="3">Arquitectura</option>
+            <option value="4">Contabilidad</option>
+        </select>
+        <input type="date" id="fechaIngreso" required>
+        <input type="time" id="horaIngreso" required>
+        <select id="sala">
+            <option value="1">201G</option>
+            <option value="2">202H</option>
+            <option value="3">203I</option>
+            <option value="4">301G</option>
+            <option value="5">302H</option>
+            <option value="6">303I</option>
+        </select>
+        <select id="responsable">
+            <option value="1">Juan Perez</option>
+            <option value="2">Ana Lopez</option>
+        </select>
+        <button type="submit">Registrar</button>
+    </form>
+    <script src="js/app.js"></script>
+</body>
+</html>

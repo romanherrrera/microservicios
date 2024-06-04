@@ -1,79 +1,71 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Ingreso;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class IngresoController extends Controller
 {
     public function index()
     {
-        $hoy = date('Y-m-d');
-        return Ingreso::whereDate('fechaIngreso', $hoy)->get();
+        $today = now()->toDateString();
+        return Ingreso::where('fechaIngreso', $today)->get();
     }
 
     public function store(Request $request)
     {
-        // Validación de horarios permitidos
-        $horaIngreso = strtotime($request->horaIngreso);
-        $horaPermitida = $this->validarHorarioPermitido($horaIngreso);
+        $request->validate([
+            'codigoEstudiante' => 'required|string|max:10',
+            'nombreEstudiante' => 'required|string|max:250',
+            'idPrograma' => 'required|integer',
+            'fechaIngreso' => 'required|date',
+            'horaIngreso' => 'required|date_format:H:i',
+            'idResponsable' => 'required|integer',
+            'idSala' => 'required|integer',
+        ]);
 
-        if (!$horaPermitida) {
-            return response()->json(['error' => 'Horario no permitido'], 400);
-        }
-
-        // Verificar disponibilidad de la sala
-        $disponibilidad = $this->verificarDisponibilidadSala($request->idSala, $request->fechaIngreso, $request->horaIngreso);
-
-        if (!$disponibilidad) {
-            return response()->json(['error' => 'Sala no disponible'], 400);
-        }
-
-        $ingreso = Ingreso::create($request->all());
-        return response()->json($ingreso, 201);
+        return Ingreso::create($request->all());
     }
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'codigoEstudiante' => 'sometimes|required|string|max:10',
+            'nombreEstudiante' => 'sometimes|required|string|max:250',
+        ]);
+
         $ingreso = Ingreso::findOrFail($id);
-        $ingreso->update($request->only(['codigoEstudiante', 'nombreEstudiante']));
-        return response()->json($ingreso);
+        $ingreso->update($request->all());
+
+        return $ingreso;
     }
 
-    public function showByDateRange(Request $request)
+    public function getByDateRange(Request $request)
     {
-        $fechaInicio = $request->fechaInicio;
-        $fechaFin = $request->fechaFin;
-        return Ingreso::whereBetween('fechaIngreso', [$fechaInicio, $fechaFin])->get();
+        $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+        ]);
+
+        return Ingreso::whereBetween('fechaIngreso', [$request->start_date, $request->end_date])->get();
     }
 
-    private function validarHorarioPermitido($hora)
+    public function filter(Request $request)
     {
-        // Implementación de validación de horarios permitidos
-        $dia = date('N', $hora); // 1 (para Lunes) hasta 7 (para Domingo)
-        $horaInicio = strtotime("07:00");
-        $horaFin = ($dia == 6) ? strtotime("16:30") : strtotime("20:50");
+        $query = Ingreso::query();
 
-        return $hora >= $horaInicio && $hora <= $horaFin && $dia <= 6;
-    }
+        if ($request->has('codigoEstudiante')) {
+            $query->where('codigoEstudiante', $request->codigoEstudiante);
+        }
 
-    private function verificarDisponibilidadSala($idSala, $fecha, $hora)
-    {
-        // Implementar la lógica para verificar si la sala está disponible
-        // basado en `horarios_salas`
-        $dia = date('l', strtotime($fecha));
-        $hora = date('H:i:s', strtotime($hora));
+        if ($request->has('idPrograma')) {
+            $query->where('idPrograma', $request->idPrograma);
+        }
 
-        $ocupada = DB::table('horarios_salas')
-            ->where('idSala', $idSala)
-            ->where('dia', $dia)
-            ->where('horaInicio', '<=', $hora)
-            ->where('horaFin', '>=', $hora)
-            ->exists();
+        if ($request->has('idResponsable')) {
+            $query->where('idResponsable', $request->idResponsable);
+        }
 
-        return !$ocupada;
+        return $query->get();
     }
 }
-?>
