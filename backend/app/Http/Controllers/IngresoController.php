@@ -15,6 +15,7 @@ class IngresoController extends Controller
             'nombreEstudiante' => 'required|string|max:250',
             'fechaIngreso' => 'required|date',
             'horaIngreso' => 'required|date_format:H:i',
+            'horaSalida' => 'nullable|date_format:H:i', // Permitir hora de salida nula
             'idPrograma' => 'required|integer',
             'idSala' => 'required|integer',
             'idResponsable' => 'required|integer',
@@ -26,12 +27,13 @@ class IngresoController extends Controller
         $ingreso->nombreEstudiante = $request->nombreEstudiante;
         $ingreso->fechaIngreso = $request->fechaIngreso;
         $ingreso->horaIngreso = $request->horaIngreso;
+        $ingreso->horaSalida = $request->horaSalida; // Asignar hora de salida
         $ingreso->idPrograma = $request->idPrograma;
         $ingreso->idSala = $request->idSala;
         $ingreso->idResponsable = $request->idResponsable;
         $ingreso->save();
 
         // Redireccionar a alguna ruta después de guardar el ingreso
-        return redirect()->route('ingresos.index')->with('success', 'Ingreso registrado correctamente');
+        return response()->json(['message' => 'Ingreso registrado correctamente'], 201);
     }
 }
