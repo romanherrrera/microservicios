@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Ingreso extends Model
 {
-    use HasFactory;
-
     protected $table = 'ingresos';
 
     protected $fillable = [
@@ -24,14 +21,17 @@ class Ingreso extends Model
 
     public function programa()
     {
-        return $this->belongsTo(Programa::class, 'idPrograma');
+        return $this->belongsTo(Programa::class);
     }
+
     public function sala()
     {
-        return $this->belongsTo(Sala::class, 'idSala');
+        return $this->belongsTo(Sala::class);
     }
+
     public function responsable()
     {
-        return $this->belongsTo(Responsable::class, 'idResponsable');
+        return $this->belongsTo(Responsable::class);
     }
 }
+
