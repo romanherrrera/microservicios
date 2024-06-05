@@ -1,16 +1,15 @@
-// Obtener referencias a los elementos del formulario
-const form = document.getElementById('form-ingreso'); // Asegúrate de que este ID coincida con el del formulario en HTML
+const form = document.getElementById('form-ingreso');
 const programaSelect = document.getElementById('programa');
 const salaSelect = document.getElementById('sala');
 const responsableSelect = document.getElementById('responsable');
 
-// Agregar evento de envío al formulario
+
 form.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Evitar que el formulario se envíe normalmente
+    event.preventDefault(); 
 
     console.log('Enviando solicitud al backend...');
 
-    // Obtener los valores seleccionados por el usuario
+  
     const codigoEstudiante = document.getElementById('codigo').value;
     const nombreEstudiante = document.getElementById('nombre').value;
     const fechaIngreso = document.getElementById('fechaIngreso').value;
@@ -20,21 +19,20 @@ form.addEventListener('submit', async (event) => {
     const salaId = salaSelect.value;
     const responsableId = responsableSelect.value;
 
-    // Crear objeto con los datos a enviar al servidor
+
     const data = {
         codigoEstudiante: codigoEstudiante,
         nombreEstudiante: nombreEstudiante,
         fechaIngreso: fechaIngreso,
         horaIngreso: horaIngreso,
-        horaSalida: horaSalida, // Incluir hora de salida
+        horaSalida: horaSalida,
         idPrograma: programaId,
         idSala: salaId,
         idResponsable: responsableId
     };
 
     try {
-        // Enviar los datos al servidor utilizando Fetch API
-        const response = await fetch('/api/ingresos', { // URL correcta para la API
+        const response = await fetch('/ingresos', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -44,7 +42,6 @@ form.addEventListener('submit', async (event) => {
 
         if (response.ok) {
             alert('Datos guardados exitosamente');
-            // Realizar cualquier acción adicional después de guardar los datos
         } else {
             throw new Error('Error al guardar los datos');
         }
@@ -54,7 +51,6 @@ form.addEventListener('submit', async (event) => {
     }
 });
 
-// Cargar opciones de selección
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const programaResponse = await fetch('/api/programas');

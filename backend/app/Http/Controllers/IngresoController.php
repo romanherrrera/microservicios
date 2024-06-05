@@ -17,6 +17,7 @@ class IngresoController extends Controller
             'nombreEstudiante' => 'required|string|max:250',
             'fechaIngreso' => 'required|date',
             'horaIngreso' => 'required|date_format:H:i',
+            'horaSalida' => 'required|date_format:H:i',
             'idPrograma' => 'required|integer|exists:programas,id',
             'idSala' => 'required|integer|exists:salas,id',
             'idResponsable' => 'required|integer|exists:responsables,id',
@@ -27,6 +28,7 @@ class IngresoController extends Controller
         $ingreso->nombreEstudiante = $request->nombreEstudiante;
         $ingreso->fechaIngreso = $request->fechaIngreso;
         $ingreso->horaIngreso = $request->horaIngreso;
+        $ingreso->horaSalida = $request->horaSalida;
         $ingreso->idPrograma = $request->idPrograma;
         $ingreso->idSala = $request->idSala;
         $ingreso->idResponsable = $request->idResponsable;
@@ -53,3 +55,4 @@ class IngresoController extends Controller
         return response()->json($responsables);
     }
 }
+
