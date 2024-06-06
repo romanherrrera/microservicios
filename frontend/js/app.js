@@ -4,8 +4,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const responsableSelect = document.getElementById('responsable');
 
     try {
-        const programaResponse = await fetch('/api/programas');
+        const programaResponse = await fetch('/backend/api/programas');
         const programas = await programaResponse.json();
+        programaSelect.innerHTML = ''; // Limpiar opciones existentes
         programas.forEach(programa => {
             const option = document.createElement('option');
             option.value = programa.id;
@@ -13,8 +14,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             programaSelect.appendChild(option);
         });
 
-        const salaResponse = await fetch('/api/salas');
+        const salaResponse = await fetch('/backend/api/salas');
         const salas = await salaResponse.json();
+        salaSelect.innerHTML = ''; // Limpiar opciones existentes
         salas.forEach(sala => {
             const option = document.createElement('option');
             option.value = sala.id;
@@ -22,8 +24,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             salaSelect.appendChild(option);
         });
 
-        const responsableResponse = await fetch('/api/responsables');
+        const responsableResponse = await fetch('/backend/api/responsables');
         const responsables = await responsableResponse.json();
+        responsableSelect.innerHTML = ''; // Limpiar opciones existentes
         responsables.forEach(responsable => {
             const option = document.createElement('option');
             option.value = responsable.id;
@@ -34,38 +37,3 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error al cargar opciones:', error);
     }
 });
-
-const form = document.getElementById('form-ingreso');
-form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const data = {
-        codigoEstudiante: document.getElementById('codigo').value,
-        nombreEstudiante: document.getElementById('nombre').value,
-        fechaIngreso: document.getElementById('fechaIngreso').value,
-        horaIngreso: document.getElementById('horaIngreso').value,
-        idPrograma: document.getElementById('programa').value,
-        idSala: document.getElementById('sala').value,
-        idResponsable: document.getElementById('responsable').value
-    };
-
-    try {
-        const response = await fetch('/api/ingresos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (response.ok) {
-            alert('Ingreso registrado correctamente');
-        } else {
-            throw new Error('Error al registrar el ingreso');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Ocurrió un error al registrar el ingreso');
-    }
-});
-
