@@ -1,57 +1,8 @@
-const form = document.getElementById('form-ingreso');
-const programaSelect = document.getElementById('programa');
-const salaSelect = document.getElementById('sala');
-const responsableSelect = document.getElementById('responsable');
-
-
-form.addEventListener('submit', async (event) => {
-    event.preventDefault(); 
-
-    console.log('Enviando solicitud al backend...');
-
-  
-    const codigoEstudiante = document.getElementById('codigo').value;
-    const nombreEstudiante = document.getElementById('nombre').value;
-    const fechaIngreso = document.getElementById('fechaIngreso').value;
-    const horaIngreso = document.getElementById('horaIngreso').value;
-    const horaSalida = document.getElementById('horaSalida').value;
-    const programaId = programaSelect.value;
-    const salaId = salaSelect.value;
-    const responsableId = responsableSelect.value;
-
-
-    const data = {
-        codigoEstudiante: codigoEstudiante,
-        nombreEstudiante: nombreEstudiante,
-        fechaIngreso: fechaIngreso,
-        horaIngreso: horaIngreso,
-        horaSalida: horaSalida,
-        idPrograma: programaId,
-        idSala: salaId,
-        idResponsable: responsableId
-    };
-
-    try {
-        const response = await fetch('/ingresos', { 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (response.ok) {
-            alert('Datos guardados exitosamente');
-        } else {
-            throw new Error('Error al guardar los datos');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Ocurrió un error al guardar los datos');
-    }
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
+    const programaSelect = document.getElementById('programa');
+    const salaSelect = document.getElementById('sala');
+    const responsableSelect = document.getElementById('responsable');
+
     try {
         const programaResponse = await fetch('/api/programas');
         const programas = await programaResponse.json();
@@ -83,3 +34,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error al cargar opciones:', error);
     }
 });
+
+const form = document.getElementById('form-ingreso');
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const data = {
+        codigoEstudiante: document.getElementById('codigo').value,
+        nombreEstudiante: document.getElementById('nombre').value,
+        fechaIngreso: document.getElementById('fechaIngreso').value,
+        horaIngreso: document.getElementById('horaIngreso').value,
+        idPrograma: document.getElementById('programa').value,
+        idSala: document.getElementById('sala').value,
+        idResponsable: document.getElementById('responsable').value
+    };
+
+    try {
+        const response = await fetch('/api/ingresos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            alert('Ingreso registrado correctamente');
+        } else {
+            throw new Error('Error al registrar el ingreso');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Ocurrió un error al registrar el ingreso');
+    }
+});
+

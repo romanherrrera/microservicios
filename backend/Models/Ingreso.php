@@ -34,4 +34,3 @@ class Ingreso extends Model
         return $this->belongsTo(Responsable::class);
     }
 }
-
